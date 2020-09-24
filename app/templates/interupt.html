@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Space Trader{% endblock %}
+{% block body %}
+<h1>Encounter: {{name}}</h1>
+
+{% if name == 'Bandit' %}
+<h6>get bodied</h6>
+<img src="https://images.vexels.com/media/users/3/153030/isolated/preview/7a7696ba9e1d28cefff480969f0dd4cc-bandit-character-robbing-bank-by-vexels.png" alt="Image result for bandit pictures png" width="100" height="100" style="">
+<p>The Bandit requires you pay ${{npc.credit_demand}}<p>
+<a class="btn" href="/npc/{{g_id}}/{{npc_id}}/{{region_name}}/1">Pay</a>
+<a class="btn" href="/npc/{{g_id}}/{{npc_id}}/{{region_name}}/2">Flee</a>
+<a class="btn" href="/npc/{{g_id}}/{{npc_id}}/{{region_name}}/3">Fight</a>
+{% endif %}
+{% if name == 'Trader' %}
+<img class="irc_mi" src="https://img.pngio.com/merchant-png-png-image-merchant-png-370_651.png" alt="Image result for merchant png" width="100" height="176" style="">
+<p>The Trader offers you {{npc.amount}} of {{ npc.item }} for ${{ npc.item_price }} each<p>
+<a class="btn" href="/npc/{{g_id}}/{{npc_id}}/{{region_name}}/1">Buy</a>
+<a class="btn" href="/npc/{{g_id}}/{{npc_id}}/{{region_name}}/2">Ignore</a>
+<a class="btn" href="/npc/{{g_id}}/{{npc_id}}/{{region_name}}/3">Rob</a>
+<a class="btn" href="/npc/{{g_id}}/{{npc_id}}/{{region_name}}/4">Negotiate</a>
+{% endif %}
+{% if name == 'Police' %}
+<img class="irc_mi" src="https://img.pngio.com/policeman-png-download-7491174-free-transparent-police-police-officer-png-900_1180.jpg" alt="Image result for police png" width="100" height="131" style="">
+<p>'You have some stolen items!' - Ocifer Daniel</p>
+<a class="btn" href="/npc/{{g_id}}/{{npc_id}}/{{region_name}}/1">Forfeit Items</a>
+<a class="btn" href="/npc/{{g_id}}/{{npc_id}}/{{region_name}}/2">Flee</a>
+<a class="btn" href="/npc/{{g_id}}/{{npc_id}}/{{region_name}}/3">Fight</a>
+{% endif %}
+<h4>Credits: {{player.credits}} || Cash: ${{player.currency}}</h4>
+{% if player.inventory[0] %}
+    <h4 style="display: inline-block;">Inventory: </h4>
+    {% for item in player.inventory %}
+        <p class="item"style="display: inline-block;">{{item}}</p>
+    {% endfor %}
+{%endif%}
+{%endblock%}

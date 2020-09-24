@@ -1,0 +1,80 @@
+body {
+    text-align: center;
+    background-color: black;
+    font-family: Calibri;
+    color: white;
+}
+.btn {
+    font-size: 1.3em;
+    border-width: 2px;
+    border-color: white;
+    border-radius: 6px;
+    border-style: solid;
+    display: inline-block;
+    padding-right: 4px;
+    padding-left: 4px;
+    transition: 0.3s;
+    color: white;
+    text-decoration: none;
+    margin: 15px;
+}
+.btn_item {
+    font-size: 1.3em;
+    border-width: 2px;
+    border-color: white;
+    border-radius: 6px;
+    border-style: solid;
+    display: inline-block;
+    padding-right: 4px;
+    padding-left: 4px;
+    transition: 0.3s;
+    color: white;
+    text-decoration: none;
+}
+.btn:hover {
+    background-color: #556655;
+    cursor: pointer;
+}
+.btn_item:hover {
+    background-color: #556655;
+    cursor: pointer;
+}
+.selected {
+    background-color: #556655;
+}
+.skills {
+    background-color: #556655;
+    border-radius: 5px;
+}
+.player_left {
+    display: inline-block;
+    vertical-align: middle;
+    text-align: right;
+}
+.player_right {
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    margin-left: 2%;
+}
+.player {
+    text-align: center;
+    vertical-align: top;
+    margin-right: 20px;
+    padding: 0;
+}
+.bottom {
+    bottom: 0;
+}
+.hiddeninfo {
+    display: none;
+}
+.openinfo {
+    display: block;
+}
+.item {
+    background-color: darkred;
+    border-radius: 6px;
+    padding-left: 4px;
+    padding-right: 4px;
+}

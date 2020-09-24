@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% block title %}Space Trader{% endblock %}
+{% block body %}
+<div class="main">
+    <table style="width:100%;"class="main_table">
+        <tr>
+            <td>
+                <div class="player_left">
+                    <h3>Welcome to space, {{player.name}}</h3>
+                    <h4>Difficulty: {{game.difficulty}}</h4>
+                    <h4>Credits: {{player.credits}} || Cash: ${{player.currency}}</h4>
+                    {% if player.inventory[0] %}
+                        <h4 style="display: inline-block;">Inventory: </h4>
+                        {% for item in player.inventory %}
+                            <p class="item"style="display: inline-block;">{{item}}</p>
+                        {% endfor %}
+                    {%endif%}
+                </div>
+                <div class="player_right">
+                    <table class="skills"align="center">
+                         <tr><th>Skill Name</th><th>Skill Points</th></tr>
+                         <tr><td>Piloting</td><td>{{player.pilot_points}}</td></tr>
+                         <tr><td>Fighting</td><td>{{player.fighter_points}}</td></tr>
+                         <tr><td>Trading</td><td>{{player.merchant_points}}</td></tr>
+                         <tr><td>Engineering</td><td>{{player.engineer_points}}</td></tr>
+                    </table>
+                </div>
+                <h3>Map</h3>
+                <canvas id="map" width="500" height="470"></canvas>
+                <div class="hiddeninfo"id="updateinfo">
+                </div>
+            </td>
+            <td class="player" style="width: 50%;">
+                <h3>{{player.region.name}}'s Market</h3>
+                <p>Tech Level: {{player.region.tech_level.value[0]}}</p>
+                <p style="margin-bottom: 20px;">Coordinates: ({{player.region.x_coordinate}},{{player.region.y_coordinate}})</p>
+                <a class="btn" href="/market/{{g_id}}">Visit Market</a>
+                
+                <hr>
+                <h3>Ship: {{player.ship.name}}</h3>
+                <p>Cargo: {{player.ship.current_cargo}}/{{player.ship.cargo_max}}</p>
+                <p>Health: {{player.ship.current_health}}/{{player.ship.health_max}}</p>
+                <p>Fuel: {{player.ship.current_fuel}}/{{player.ship.fuel_max}}</p>
+                <hr>
+                <h3>Travel</h3>
+                {% for i in range(0, 10) %}
+                    {% if player.region.name != regions[i].name %}
+                        <a class="btn"onmouseover="highlight('{{regions[i].name}}')"onmouseleave="highlight('null')"href="{{g_id}}/travel/{{regions[i].name}}/1">{{regions[i].name}}</a>
+                    {%endif%}
+                {% endfor %}
+            </td>
+        </tr>       
+ </table>
+</div>
+<script>
+var canvas = document.getElementById("map");
+var ctx = canvas.getContext("2d");
+ctx.strokeStyle = "#FFFFFF";
+ctx.strokeRect(50,50,410,410);
+ctx.font = "18px Monospace";
+ctx.fillStyle = "#FFFFFF"
+ctx.fillText("You",50,35);
+ctx.fillStyle = "#00FFFF"
+ctx.fillRect(88, 24, 14, 14)
+ctx.fillStyle = "#FFFFFF"
+ctx.fillText("Destination", 112, 35)
+ctx.fillStyle = "#FF0000"
+ctx.fillRect(225, 24, 14, 14)
+ctx.fillStyle = "#FFFFFF"
+ctx.fillText("Other Regions", 247, 35)
+ctx.fillStyle = "#FFFF00"
+ctx.fillRect(380, 24, 14, 14)
+
+function highlight(name) {
+    var selectedx = -999
+    var selectedy = -999
+    var level = 'null'
+    {% for i in range(0,10) %}
+        var canvas = document.getElementById("map");
+        var ctx = canvas.getContext("2d");
+        ctx.fillStyle = '#FFFF00'
+        if (name == '{{regions[i].name}}') {
+            ctx.fillStyle = '#FF0000'
+        }
+        if ('{{player.region.name}}' == '{{regions[i].name}}') {
+            ctx.fillStyle = '#00FFFF'
+        }
+        var x_coordinate = parseInt('{{regions[i].x_coordinate}}')
+        var y_coordinate = parseInt('{{regions[i].y_coordinate}}')
+        ctx.fillRect(x_coordinate+247,-y_coordinate+247,6,6)
+        level = '{{regions[i].tech_level.value[0]}}'
+        player_x = parseInt('{{player.region.x_coordinate}}')
+        player_y = parseInt('{{player.region.y_coordinate}}')
+        distance = Math.sqrt(Math.pow(player_x - x_coordinate,2)+Math.pow(player_y - y_coordinate,2))
+        player_pilot = parseInt('{{player.pilot_points}}')
+        cost = player_pilot <= 4 ? distance - (player_pilot * 3.5) : distance / (.25 * player_pilot)
+        cost = Math.round(cost * 100) / 100
+        fuel = parseFloat('{{player.ship.current_fuel}}')
+        d = fuel - cost
+        if (name == '{{regions[i].name}}') {
+            document.getElementById("updateinfo").classList.remove('hiddeninfo')
+            document.getElementById("updateinfo").classList.add('openinfo')
+            var p = document.createElement("p")
+            var p1 = document.createElement("p")
+            var p2 = document.createElement("p")
+            var p3 = document.createElement("p")
+            var n = document.createTextNode('Selected Region: ' + name)
+            var n1 = document.createTextNode(name+"'s"+' TechLevel: ' + level)
+            var n2 = document.createTextNode(name+"'s"+' Location: (' + x_coordinate + "," + y_coordinate + ")")
+            var n3 = document.createTextNode("Cost: " + cost + " fuel")
+
+            p.appendChild(n)
+            p1.appendChild(n1)
+            p2.appendChild(n2)
+            p3.appendChild(n3)
+
+            document.getElementById("updateinfo").appendChild(p)
+            document.getElementById("updateinfo").appendChild(p1)
+            document.getElementById("updateinfo").appendChild(p2)
+            document.getElementById("updateinfo").appendChild(p3)
+            if (d < 0) {
+                var p4 = document.createElement("h3")
+                var n4 = document.createTextNode("INSUFFICIENT FUEL")
+                p4.appendChild(n4)
+                p4.style.color = '#FF0000'
+                document.getElementById("updateinfo").appendChild(p4)
+            }
+        }  
+    {% endfor %} 
+    if (name == 'null') {
+        document.getElementById("updateinfo").classList.remove('openinfo')
+        document.getElementById("updateinfo").classList.add('hiddeninfo')
+        document.getElementById("updateinfo").innerHTML = ''
+    } 
+}
+</script>
+{% for i in range(0, 10) %}
+    <script>
+        var canvas = document.getElementById("map");
+        var ctx = canvas.getContext("2d");
+        ctx.fillStyle = '#FFFF00'
+        if ('{{player.region.name}}' == '{{regions[i].name}}') {
+            ctx.fillStyle = '#00FFFF'
+        }
+        var x_coordinate = parseFloat('{{regions[i].x_coordinate}}')
+        var y_coordinate = parseFloat('{{regions[i].y_coordinate}}')
+        ctx.fillRect(x_coordinate+247,-y_coordinate+247,6,6)
+    </script>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}About{% endblock %}
+{% block body %}
+<script src="/static/main.js"></script>
+<div class="jumbotron">
+  <h1>Create Your Character</h1>
+  <form method="POST">
+      <h3 style="display: inline-block;">Name:</h3> <input type="text"name="name"><br>
+
+      <h3 style="display: inline-block;">Difficulty:</h3> <input type="radio"name="difficulty"onclick="updatePoints()" value="easy"> Easy <input type="radio"name="difficulty"onclick="updatePoints()" value="normal"> Normal <input type="radio"name="difficulty"onclick="updatePoints()"value="hard"> Hard <br>
+
+      <h3 style="display: inline-block;" id="skill_points">Skill Points</h3> <br>
+      Pilot Points <input class="occupation"style="width: 50px;"type="number"name="p_occupation"min="0"max="0"oninput="updateAvailablePoints()"value="0"><br>
+      Fighter Points <input class="occupation"style="width: 50px;"type="number"name="f_occupation"min="0"max="0"oninput="updateAvailablePoints()"value="0"><br>
+      Merchant Points <input class="occupation"style="width: 50px;"type="number"name="m_occupation"min="0"max="0"oninput="updateAvailablePoints()"value="0"><br>
+      Engineer Points <input class="occupation"class="occupation"style="width: 50px;"type="number"name="e_occupation"min="0"max="0"oninput="updateAvailablePoints()"value="0">
+      <br><br><input type="submit">
+  </form>
+</div>
+{% endblock %}

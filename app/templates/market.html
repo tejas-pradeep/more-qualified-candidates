@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Space Trader{% endblock %}
+{% block body %}
+<h4>Credits: {{player.credits}} || Cash: ${{player.currency}}</h4>
+{% if player.inventory[0] %}
+    <h4 style="display: inline-block;">Inventory: </h4>
+    {% for item in player.inventory %}
+        <p class="item"style="display: inline-block;">{{item}}</p>
+    {% endfor %}
+{%endif%}
+<table style="text-align:center;">
+    <tr>
+        <td>Item</td><td>Buy Price</td><td>Sell Price</td>
+        {% for key,value in player.region.market.market_list.items() %}
+            <tr>
+                <td>{{key}}</td><td><a class="btn_item"href="{{g_id}}/buy/{{key}}/{{value[0]}}">${{value[0]}}</a></td><td><a class="btn_item"href="{{g_id}}/sell/{{key}}/{{value[1]}}">${{value[1]}}</a></td>
+            </tr>
+        {% endfor %}
+        {% if player.region.name == game.special_region %}
+            <tr>
+                <td>{{player.name + '\'s Universe'}}</td><td><a class="btn_item"href="/buywin/{{g_id}}">750</a></td>
+            </tr>
+        {% endif %}
+    </tr>
+</table>
+<a class="btn" href="/fuel/{{g_id}}">Buy Fuel (10 c / 50 f)</a>
+<a class="btn" href="/heal/{{g_id}}/{{player.engineer_points + 1}}">Repair Ship (10 c / {{player.engineer_points + 1}} hp)</a>
+<a class="btn" href="/game/{{g_id}}">Back</a>
+{%endblock%}
